@@ -110,7 +110,11 @@ Uninstall($program)
     }
 }
 
-$ScriptFol = Split-Path -Parent $MyInvocation.MyCommand.Definition
+if ($MyInvocation.MyCommand.CommandType -eq "ExternalScript")
+{ $ScriptPath = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition }
+else
+{ $ScriptPath = Split-Path -Parent -Path ([Environment]::GetCommandLineArgs()[0]) 
+    if (!$ScriptPath){ $ScriptPath = "." } }
 
 function Restart-PowerShell-Elevated
 {
@@ -129,7 +133,7 @@ Set-Alias -Name rpe -Value Restart-PowerShell-Elevated
 rpe
 
 #$ScriptFolder = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$ScriptFolder = $ScriptFol + "\Data\"
+$ScriptFolder = $ScriptPath + "\Data\"
 $ScriptFolder
 
 Function  UnblockComponents 
